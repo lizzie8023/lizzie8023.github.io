@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>学习笔记</title>
+  <title>玫瑰少年</title>
   
-  
+  <subtitle>学习和工作中的记录</subtitle>
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
@@ -41,26 +41,22 @@
   
   <entry>
     <title>Flutter学习</title>
-    <link href="http://example.com/2020/10/15/flutter%E5%AD%A6%E4%B9%A0/"/>
-    <id>http://example.com/2020/10/15/flutter%E5%AD%A6%E4%B9%A0/</id>
-    <published>2020-10-15T03:46:28.000Z</published>
-    <updated>2020-10-14T03:54:08.402Z</updated>
+    <link href="http://example.com/2020/10/14/flutter%E5%AD%A6%E4%B9%A0/"/>
+    <id>http://example.com/2020/10/14/flutter%E5%AD%A6%E4%B9%A0/</id>
+    <published>2020-10-14T03:59:34.000Z</published>
+    <updated>2020-10-14T03:59:40.920Z</updated>
     
     <content type="html"><![CDATA[<h1 id="变量声明"><a href="#变量声明" class="headerlink" title="变量声明"></a>变量声明</h1><h6 id="Swift和Dart都可以自动推断类型"><a href="#Swift和Dart都可以自动推断类型" class="headerlink" title="Swift和Dart都可以自动推断类型"></a>Swift和Dart都可以自动推断类型</h6><h6 id="Swift在变量名之后带上类型，已-lt-gt-分隔，Dart则在变量名之前需要写明类型"><a href="#Swift在变量名之后带上类型，已-lt-gt-分隔，Dart则在变量名之前需要写明类型" class="headerlink" title="Swift在变量名之后带上类型，已&lt;:&gt;分隔，Dart则在变量名之前需要写明类型"></a>Swift在变量名之后带上类型，已&lt;:&gt;分隔，Dart则在变量名之前需要写明类型</h6><h5 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h5><p>`var name:String</p><p>var name:String = “Tom”`</p><h5 id="Dart"><a href="#Dart" class="headerlink" title="Dart"></a>Dart</h5><p>`String name;</p><p>String name = ‘Tom’;`</p>]]></content>
     
     
-    <summary type="html">暂无</summary>
+    <summary type="html">学习Flutter过程中的一些理解和笔记</summary>
     
     
     
     <category term="flutter" scheme="http://example.com/categories/flutter/"/>
     
-    <category term="iOS" scheme="http://example.com/categories/flutter/iOS/"/>
-    
     
     <category term="工作" scheme="http://example.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-    <category term="生活阅读" scheme="http://example.com/tags/%E7%94%9F%E6%B4%BB%E9%98%85%E8%AF%BB/"/>
     
   </entry>
   
