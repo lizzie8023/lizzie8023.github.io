@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2020-10-14T03:52:23.083Z</updated>
+  <updated>2020-10-14T05:37:41.887Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,25 +17,23 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://example.com/2020/10/15/hello-world/"/>
-    <id>http://example.com/2020/10/15/hello-world/</id>
+    <title>Xcode配置</title>
+    <link href="http://example.com/2020/10/15/xcode%E9%85%8D%E7%BD%AE/"/>
+    <id>http://example.com/2020/10/15/xcode%E9%85%8D%E7%BD%AE/</id>
     <published>2020-10-15T03:46:28.000Z</published>
-    <updated>2020-10-14T03:52:23.083Z</updated>
+    <updated>2020-10-14T05:37:41.887Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="1、快捷键删除整行-or-拷贝整行"><a href="#1、快捷键删除整行-or-拷贝整行" class="headerlink" title="1、快捷键删除整行 or 拷贝整行"></a>1、快捷键删除整行 or 拷贝整行</h4><p>日常开发中，经常会有需要对整行的操作，比如删除无用的注释、删除修改前的代码、亦或者调整代码块间距等等</p><p>首先到Xcode的配置文件目录下</p><p><code>$ cd /Applications/Xcode.app/Contents/Frameworks/IDEKit.framework/Resources</code></p><p>编辑配置文件</p><p><code>$ sudo vim IDETextKeyBindingSet.plist</code></p><p>按i进入编辑模式 添加下面的键值对</p><p>`<key>Custom</key><br><dict><br>  <key>Delete Current Line In One Hit</key></p><p>  <string>moveToEndOfLine:, deleteToBeginningOfLine:, deleteToEndOfParagraph:</string> </p><p>  <key>Duplicate Current Line</key></p><p>  <string>selectLine:, copy:, moveToEndOfLine:, insertNewline:, paste:, deleteBackward:</string> </p><p> </dict>`</p><p>按下esc退出编辑模式</p><p>输入:wd退出并保存</p><p>重启Xcode，在Xcode偏好设置的Key Bindings中搜索刚添加的键值对Delete Current Line In One Hit和Duplicate Current Line,设置对应的快捷键即可~</p><h4 id="2、代码块设置"><a href="#2、代码块设置" class="headerlink" title="2、代码块设置"></a>2、代码块设置</h4><p>日产开发过程中，为了便于更加专注业务逻辑部分，可以将UI相关的代码块都封装起来，例如tableView的创建代理、button的创建等等，这些是脱离在extension之外我们需要重复去构造的部分，哪怕是用extension一行代码去生成，也得根据页面单独设置样式相关，所以直接封装到代码块后，从作文题就变成填空题了，可以节省不少开发时间。</p><p>下面以tableView为例</p><p>—&gt;这里是创建部分</p><p>`fileprivate lazy var &lt;#tableView#&gt;:UITableView = {</p><p>​    let view = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)</p><p>​    if #available(iOS 11.0, *) {</p><p>​      view.contentInsetAdjustmentBehavior = .never</p><p>​    } else {</p><p>​      automaticallyAdjustsScrollViewInsets = false</p><p>​    }</p><p>​    view.delegate = self</p><p>​    view.dataSource = self</p><p>​    view.estimatedRowHeight = &lt;#100#&gt;</p><p>​    view.rowHeight = UITableView.automaticDimension</p><p>​    view.separatorStyle = .none</p><p>​    view.backgroundColor = &lt;#UIColor#&gt;</p><p>​    view.register(&lt;#….#&gt;, forCellReuseIdentifier: &lt;#….#&gt;)</p><p>​    view.register(&lt;#….#&gt;, forCellReuseIdentifier: &lt;#….#&gt;)</p><p>​    view.register(&lt;#….#&gt;, forCellReuseIdentifier: &lt;#….#&gt;)</p><p>​    return view</p><p>  }()`</p><p>—-&gt;这里是代理相关</p><p>`extension &lt;#xxxxxxxxx#&gt;:UITableViewDelegate,UITableViewDataSource {</p><p>  func numberOfSections(in tableView: UITableView) -&gt; Int {</p><p>​    &lt;#code#&gt;</p><p>  }</p><p>  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -&gt; Int {</p><p>​    &lt;#code#&gt;</p><p>  }</p><p>  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell {</p><p>​    &lt;#code#&gt;</p><p>  }</p><p>  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {</p><p>​    &lt;#code#&gt;</p><p>  }</p><p>  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -&gt; CGFloat {</p><p>​    &lt;#code#&gt;</p><p>  }</p><p>}`</p><p>对应配置成快捷键，日常开发需要一个list，直接xxxtabview和xxxtabdele就生成出来，然后开始根据页面定制化填写即可。</p>]]></content>
     
     
     <summary type="html">暂无</summary>
     
     
     
-    <category term="flutter" scheme="http://example.com/categories/flutter/"/>
-    
-    <category term="iOS" scheme="http://example.com/categories/flutter/iOS/"/>
+    <category term="iOS" scheme="http://example.com/categories/iOS/"/>
     
     
     <category term="工作" scheme="http://example.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-    <category term="生活阅读" scheme="http://example.com/tags/%E7%94%9F%E6%B4%BB%E9%98%85%E8%AF%BB/"/>
     
   </entry>
   
