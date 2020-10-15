@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2020-10-14T06:45:16.313Z</updated>
+  <updated>2020-10-15T09:01:42.736Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Swift图片压缩</title>
+    <link href="http://example.com/2020/10/15/Swift%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9/"/>
+    <id>http://example.com/2020/10/15/Swift%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9/</id>
+    <published>2020-10-15T08:45:12.000Z</published>
+    <updated>2020-10-15T09:01:42.736Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>日常开发过程中，会有需求用户图片上传，如果上传的图片太大，会影响上传耗时以及考虑上传后如果没有使用类似七牛裁切、压缩相关配置，在客户端展示的时候也会影响到加载耗时，所以有必要对图片尺寸做下压缩处理，这里使用分类实现</strong></p><p><code>extension UIImage &#123;</code></p><p>``   </p><p>  <code>/// maxSize:限制的最小尺寸</code></p><p>  <code>func resetSizeOfImageData(maxSize: Int) -&gt; Data? &#123;</code></p><p>​    <code>if let imageData = self.jpegData(compressionQuality: 1.0),</code></p><p>​      <code>imageData.count &lt;= maxSize &#123;</code></p><p>​      <code>return imageData</code></p><p>​    <code>&#125;</code></p><p>``     </p><p>​    <code>func compressedDataOfImage(_ image: UIImage?) -&gt; Data? &#123;</code></p><p>​      <code>guard let image = image else &#123;</code></p><p>​        <code>return nil</code></p><p>​      <code>&#125;</code></p><p>​      <code>let imageData = image.binaryCompression(to: maxSize)</code></p><p>``       </p><p>​      <code>if imageData == nil &#123;</code></p><p>​        <code>let currentMiniIamgeDataSize = jpegData(compressionQuality: 0.01)?.count ?? 0</code></p><p>​        <code>var proportion = CGFloat(currentMiniIamgeDataSize / maxSize)</code></p><p>​        <code>proportion = proportion == 1 ? 2 : proportion</code></p><p>​        <code>let newWidth = image.size.width * scale / proportion</code></p><p>​        <code>let newHeight = image.size.height * scale / proportion</code></p><p>​        <code>let newSize = CGSize(width: newWidth, height: newHeight)</code></p><p>​        <code>UIGraphicsBeginImageContext(newSize)</code></p><p>​        <code>image.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))</code></p><p>​        <code>let newImage = UIGraphicsGetImageFromCurrentImageContext()</code></p><p>​        <code>UIGraphicsEndImageContext()</code></p><p>​        <code>return compressedDataOfImage(newImage)</code></p><p>​      <code>&#125;</code></p><p>​      <code>return imageData</code></p><p>​    <code>&#125;</code></p><p>​    <code>return compressedDataOfImage(self)</code></p><p>  <code>&#125;</code></p><p>  <code>// 二分查找合适的尺寸和压缩比例</code></p><p>  <code>private func binaryCompression(to maxSize: Int) -&gt; Data? &#123;</code></p><p>​    <code>var compressionQualitys = [CGFloat](repeating: 0, count: 100)</code></p><p>​    <code>var i = compressionQualitys.count + 1</code></p><p>​    <code>// 转换0-1范围</code></p><p>​    <code>compressionQualitys = compressionQualitys.map &#123; (_) -&gt; CGFloat in</code></p><p>​      <code>let newValue = CGFloat(i) / CGFloat(compressionQualitys.count + 1)</code></p><p>​      <code>i -= 1</code></p><p>​      <code>return newValue</code></p><p>​    <code>&#125;</code></p><p>​    <code>var imageData: Data? = jpegData(compressionQuality: 1)</code></p><p>​    <code>var outPutImageData: Data?</code></p><p>​    <code>var start = 0</code></p><p>​    <code>var end = compressionQualitys.count - 1</code></p><p>​    <code>var index = 0</code></p><p>​    <code>var difference = Int.max</code></p><p>​    <code>while start &lt;= end &#123;</code></p><p>​      <code>index = start + (end - start) / 2</code></p><p>​      <code>imageData = jpegData(compressionQuality: compressionQualitys[index])</code></p><p>​      <code>let imageDataSize = imageData?.count ?? 0</code></p><p>​      <code>if imageDataSize &gt; maxSize &#123;</code></p><p>​        <code>start = index + 1</code></p><p>​      <code>&#125; else if imageDataSize &lt; maxSize &#123;</code></p><p>​        <code>if (maxSize - imageDataSize) &lt; difference &#123;</code></p><p>​          <code>difference = (maxSize - imageDataSize)</code></p><p>​          <code>outPutImageData = imageData</code></p><p>​        <code>&#125;</code></p><p>​        <code>if index &lt;= 0 &#123;</code></p><p>​          <code>break</code></p><p>​        <code>&#125;</code></p><p>​        <code>end = index - 1</code></p><p>​      <code>&#125; else &#123;</code></p><p>​        <code>break</code></p><p>​      <code>&#125;</code></p><p>​    <code>&#125;</code></p><p>​    <code>return outPutImageData</code></p><p>  <code>&#125;</code></p><p><code>&#125;</code></p>]]></content>
+    
+    
+    <summary type="html">description</summary>
+    
+    
+    
+    <category term="iOS" scheme="http://example.com/categories/iOS/"/>
+    
+    
+    <category term="工作" scheme="http://example.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+  </entry>
   
   <entry>
     <title>Xcode配置</title>
