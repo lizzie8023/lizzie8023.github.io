@@ -39,14 +39,14 @@
 
   
   <url>
-    <loc>http://example.com/tags/%E5%B7%A5%E4%BD%9C/</loc>
+    <loc>http://example.com/tags/%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2020-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://example.com/tags/%E5%AD%A6%E4%B9%A0/</loc>
+    <loc>http://example.com/tags/%E5%B7%A5%E4%BD%9C/</loc>
     <lastmod>2020-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -55,14 +55,14 @@
 
   
   <url>
-    <loc>http://example.com/categories/iOS/</loc>
+    <loc>http://example.com/categories/Hexo/</loc>
     <lastmod>2020-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/Hexo/</loc>
+    <loc>http://example.com/categories/iOS/</loc>
     <lastmod>2020-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
