@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="GCD、iOS多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&#x2F;Users&#x2F;zhangquan&#x2F;Desktop&#x2F;zhangquan&#x2F;source&#x2F;_posts&#x2F;GCD全解">
+<meta property="og:url" content="http://example.com/2020/11/06/GCD%E5%85%A8%E8%A7%A3/index.html">
+<meta property="og:site_name" content="玫瑰少年">
+<meta property="og:description" content="GCD、iOS多线程">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-06T06:14:20.000Z">
+<meta property="article:modified_time" content="2020-11-06T09:59:23.452Z">
+<meta property="article:author" content="张泉">
+<meta property="article:tag" content="工作">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2020/11/06/GCD%E5%85%A8%E8%A7%A3/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>/Users/zhangquan/Desktop/zhangquan/source/_posts/GCD全解 | 玫瑰少年</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="玫瑰少年" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">玫瑰少年</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习和工作中的记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%AF%87"><span class="nav-text">基础篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%EF%BC%88process"><span class="nav-text">进程（process)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%EF%BC%88thread%EF%BC%89"><span class="nav-text">线程（thread）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">进程和线程的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%B2%E8%A1%8C%E3%80%81%E5%B9%B6%E8%A1%8C%E3%80%81%E5%90%8C%E6%AD%A5%E3%80%81%E5%BC%82%E6%AD%A5"><span class="nav-text">线程串行、并行、同步、异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E7%BA%BF%E7%A8%8B"><span class="nav-text">主线程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DispatchWorkItem"><span class="nav-text">DispatchWorkItem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DispatchQueue"><span class="nav-text">DispatchQueue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DispatchGroup"><span class="nav-text">DispatchGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DispatchGroup%E6%8C%82%E8%B5%B7%E3%80%81%E6%81%A2%E5%A4%8D"><span class="nav-text">DispatchGroup挂起、恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E5%9C%BA%E6%99%AF"><span class="nav-text">日常场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-text"></span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">张泉</p>
+  <div class="site-description" itemprop="description">iOS开发，来自武汉，目前在北京</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/06/GCD%E5%85%A8%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="张泉">
+      <meta itemprop="description" content="iOS开发，来自武汉，目前在北京">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="玫瑰少年">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          /Users/zhangquan/Desktop/zhangquan/source/_posts/GCD全解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2020-11-06 14:14:20 / Modified: 17:59:23" itemprop="dateCreated datePublished" datetime="2020-11-06T14:14:20+08:00">2020-11-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">GCD、iOS多线程</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h2><ul>
+<li><h4 id="进程（process"><a href="#进程（process" class="headerlink" title="进程（process)"></a>进程（process)</h4><p>进程是指在系统中正在运行的一个应用程序，就是一段程序的执行过程。</p>
+<p>每个进程之间是相互独立的, 每个进程均运行在其专用且受保护的内存空间内，进程是一个具有一定独立功能的程序关于某次数据集合的一次运行活动，它是操作系统分配资源的基本单元。</p>
+<p>进程状态：进程有三个状态，<strong>就绪</strong>，<strong>运行</strong>和<strong>阻塞</strong>。就绪状态其实就是获取了除cpu外的所有资源，只要处理器分配资源马上就可以运行。运行态就是获取了处理器分配的资源，程序开始执行，阻塞态，当程序条件不够时，需要等待条件满足时候才能执行，如等待I/O操作的时候，此刻的状态就叫阻塞态。</p>
+</li>
+<li><h4 id="线程（thread）"><a href="#线程（thread）" class="headerlink" title="线程（thread）"></a>线程（thread）</h4><p>一个进程要想执行任务,必须要有线程,至少有一条线程</p>
+<p>一个进程的所有任务都是在线程中执行</p>
+<p>每个应用程序想要跑起来,最少也要有一条线程存在,其实应用程序启动的时候我们的系统就会默认帮我们的应用程序开启一条线程,这条线程也叫做’主线程’,或者’UI线程’</p>
+</li>
+<li><h4 id="进程和线程的关系"><a href="#进程和线程的关系" class="headerlink" title="进程和线程的关系"></a>进程和线程的关系</h4><p>线程是进程的执行单元，进程的所有任务都在线程中执行</p>
+<p>线程是 CPU 调用的最小单位</p>
+<p>进程是 CPU 分配资源和调度的单位</p>
+<p>一个程序可以对应过个进程,一个进程中可有多个线程,但至少要有一条线程</p>
+<p>同一个进程内的线程共享进程资源</p>
+</li>
+<li><h4 id="线程串行、并行、同步、异步"><a href="#线程串行、并行、同步、异步" class="headerlink" title="线程串行、并行、同步、异步"></a>线程串行、并行、同步、异步</h4><p>串行：任务会根据队列的定义 FIFO 的执行，一个接一个的先进先出的进行执行，上一个没结束，后一个只能排队等待，以此类推，直到全部执行完。</p>
+<p>并行：任务会根据队列的定义 FIFO 的执行，可以理解为同时执行，但是实际上是取出来一个就会放到别的线程，然后再取出一个放到另外一个线程，因为FIFO的动作很快，忽略不计，看起来是一起执行的，需要注意GCD会根据CPU最大线程数限制执行的线程数，如果任务过多，并不是同时开始执行。</p>
+<p>同步：阻塞当前线程，直到执行完毕，线程才会往下运行，多个任务同步执行，顺序是固定的，总耗时是全部任务耗时的求和。</p>
+<p>异步：线程不会阻塞，线程正常往下运行，多个任务异步执行，顺序非固定的，总耗时是耗时最长的任务的耗时时长。</p>
+</li>
+</ul>
+<ul>
+<li><h4 id="主线程"><a href="#主线程" class="headerlink" title="主线程"></a>主线程</h4><p>应用程序启动的时候，系统默认帮我们创建的线程，称之为‘主线程’或者是‘UI线程’，主线程一般用来显示或者刷新UI界面，例如异步网络请求完毕，需要刷新界面，就要回到主线程刷新</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="DispatchWorkItem"><a href="#DispatchWorkItem" class="headerlink" title="DispatchWorkItem"></a>DispatchWorkItem</h2><p>​    调度工作项，可以理解为一项任务的封装，或者说一个闭包/函数体，把你想要执行的任务写在闭包，在初始化    时传进去    </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认优先级 只带一个尾随闭包</span></span><br><span class="line"><span class="keyword">let</span> item1 = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">10</span>&#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;item1 -&gt; \(i)  thread: \(Thread.current)&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// qos:任务优先级</span></span><br><span class="line"><span class="comment">// DispatchQoS.userInteractive 最高优先级，通常只做些短的快的事情，比如一些用户交互,这些事几乎是可以选择在主队列运行的</span></span><br><span class="line"><span class="comment">// DispatchQoS.userInitiated 也有高优先级，可能会花一点时间，但必须立即执行，因为是用户要求的,比如用户按了个按钮的开关</span></span><br><span class="line"><span class="comment">// DispatchQos.background 非用户强制要求的事情，可以等后台有空的情况下运行，优先级较低</span></span><br><span class="line"><span class="comment">// DispatchQos.utility 通常是你的应用程序想做的事，优先级低</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// flags：特殊标记</span></span><br><span class="line"><span class="keyword">let</span> item2 = <span class="type">DispatchWorkItem</span>(qos: <span class="type">DispatchQoS</span>.userInitiated, flags: <span class="type">DispatchWorkItemFlags</span>.barrier) &#123;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">10</span>&#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;item2 -&gt; \(i)  thread: \(Thread.current)&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<h2 id="DispatchQueue"><a href="#DispatchQueue" class="headerlink" title="DispatchQueue"></a>DispatchQueue</h2><p>​    调度队列，在应用程序的主线程或后台线程上连续或并发地管理任务执行的对象</p>
+<p>​    DispatchQueue有3种：</p>
+<ul>
+<li><p>Main queue：主(串行)(主线程)</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获得主队列(用来运行UI活动)</span></span><br><span class="line"><span class="keyword">let</span> mainQueue1 = <span class="type">DispatchQueue</span>.main</span><br><span class="line"><span class="comment">//主队列追加同步任务，会引起死锁 item1和item2相互等待对方先执行完</span></span><br><span class="line"><span class="comment">//mainQueue1.sync(execute: item1)</span></span><br><span class="line"><span class="comment">//mainQueue1.sync(execute: item2)</span></span><br><span class="line"><span class="comment">//主队列追加异步任务，按顺序打印</span></span><br><span class="line">mainQueue1.async(execute: item1)</span><br><span class="line">mainQueue1.async(execute: item2)</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>Global queue：全局(并发)(后台线程并行工作)</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同一队列上异步执行多个任务，而无需阻塞特定线程</span></span><br><span class="line"><span class="keyword">let</span> globalQueue1 = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="comment">//全局队列追加同步任务，按顺序打印</span></span><br><span class="line">globalQueue1.sync(execute: item1)</span><br><span class="line">globalQueue1.sync(execute: item2)</span><br><span class="line"><span class="comment">//全局队列追加异步任务，随机打印</span></span><br><span class="line">globalQueue1.async(execute: item1)</span><br><span class="line">globalQueue1.async(execute: item2)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>Custom queue：自定义(并发或串行)</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// label:附加到队列的字符串标签，便于调试</span></span><br><span class="line"><span class="comment">// attributes:队列的执行方式，省略按照串行执行，指定concurrent则为并列执行</span></span><br><span class="line"><span class="comment">//串行队列</span></span><br><span class="line"><span class="keyword">let</span> serialQueue1 = <span class="type">DispatchQueue</span>(label: <span class="string">&quot;com.serialQueue1&quot;</span>)</span><br><span class="line"><span class="comment">//并行队列</span></span><br><span class="line"><span class="keyword">let</span> concurrentQueue1 = <span class="type">DispatchQueue</span>(label: <span class="string">&quot;com.concurrentQueue1&quot;</span>, attributes: .concurrent)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义串行队列追加同步任务，按顺序打印</span></span><br><span class="line">serialQueue1.sync(execute: item1)</span><br><span class="line">serialQueue1.sync(execute: item2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义串行队列追加异步任务，按顺序打印</span></span><br><span class="line">serialQueue1.async(execute: item1)</span><br><span class="line">serialQueue1.async(execute: item2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义并行队列追加同步任务，按顺序打印</span></span><br><span class="line">concurrentQueue1.sync(execute: item1)</span><br><span class="line">concurrentQueue1.sync(execute: item2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义并行队列追加异步任务，随机打印</span></span><br><span class="line">concurrentQueue1.async(execute: item1)</span><br><span class="line">concurrentQueue1.async(execute: item2)</span><br><span class="line">concurrentQueue1.async(execute: item3)</span><br><span class="line">concurrentQueue1.async(execute: item4)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义串行队列追加混合任务 顺序打印</span></span><br><span class="line">serialQueue1.async(execute: item1)</span><br><span class="line">serialQueue1.sync(execute: item2)</span><br><span class="line">serialQueue1.async(execute: item3)</span><br><span class="line">serialQueue1.async(execute: item4)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义并行队列追加混合任务 随机打印，同步任务执行期间不会穿插异步任务，并行队列同步任务，回到主线程执行</span></span><br><span class="line">concurrentQueue1.async(execute: item1)</span><br><span class="line">concurrentQueue1.async(execute: item2)</span><br><span class="line">concurrentQueue1.async(execute: item3)</span><br><span class="line">concurrentQueue1.sync(execute: item4)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="DispatchGroup"><a href="#DispatchGroup" class="headerlink" title="DispatchGroup"></a>DispatchGroup</h2><p>​    调度组，可以将多个任务添加到一个组，并对它们进行调度，以便在同一队列或不同队列上进行异步执行。当所有工作    项完成执行后，组执行其完成处理程序。还可以同步等待组中的所有任务完成执行。</p>
+<p>​    DispatchGroup有三种用法：</p>
+<ul>
+<li><p>notify：调度组里所有任务执行完毕，会在此收到通知，不会阻塞当前线程</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> group1 = <span class="type">DispatchGroup</span>()</span><br><span class="line">concurrentQueue1.async(group: group1, execute: item1)</span><br><span class="line">concurrentQueue1.async(group: group1, execute: item2)</span><br><span class="line">group1.notify(queue: concurrentQueue1) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;group1 执行完毕 thread: \(Thread.current)&quot;</span>)</span><br><span class="line">    <span class="comment">// 需要注意这里不会阻塞线程，所以不是主线程，需要UI变化操作，需要回调主线程</span></span><br><span class="line">    <span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;刷新UI&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>wait：    等待调度组里的所有任务执行完毕或者等待超时，会阻塞当前线程</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> group2 = <span class="type">DispatchGroup</span>()</span><br><span class="line">concurrentQueue1.async(group: group2, execute: item1)</span><br><span class="line">concurrentQueue1.async(group: group2, execute: item2)</span><br><span class="line"><span class="keyword">let</span> result = group2.wait(timeout: <span class="type">DispatchTime</span>.now() + <span class="number">0.1</span>)</span><br><span class="line"><span class="keyword">switch</span> result &#123;</span><br><span class="line"><span class="keyword">case</span> .success:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;success&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> .timedOut:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;timedOut&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="DispatchGroup挂起、恢复"><a href="#DispatchGroup挂起、恢复" class="headerlink" title="DispatchGroup挂起、恢复"></a>DispatchGroup挂起、恢复</h2><p>​    前面说了DispatchGroup的notify和wait，工作场景中都是为了将耗时任务放到异步，处理完后再回到主线程处    理，这里只是简单的两个任务，就存在层级嵌套闭包回调，可以使用队列挂起和恢复解决嵌套</p>
+<p>​    </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> group3 = <span class="type">DispatchGroup</span>()</span><br><span class="line"><span class="comment">// 将并行队列挂起</span></span><br><span class="line">concurrentQueue1.suspend()</span><br><span class="line">serialQueue1.async(group: group3, execute: &#123;</span><br><span class="line">    <span class="comment">// 模拟网络加载</span></span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;serialQueue1执行完毕&quot;</span>)</span><br><span class="line">    <span class="comment">// 将并行队列恢复</span></span><br><span class="line">    concurrentQueue1.resume()</span><br><span class="line">&#125;)</span><br><span class="line">concurrentQueue1.async(group: group3, execute: &#123;</span><br><span class="line">    <span class="comment">// 模拟网络加载</span></span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;concurrentQueue1执行完毕&quot;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// queue:回调所在的线程，这里直接回调到了主线程</span></span><br><span class="line">group3.notify(queue: <span class="type">DispatchQueue</span>.main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;监听group3执行完毕&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里会报timedOut，因为是两个耗时任务</span></span><br><span class="line"><span class="keyword">let</span> result2 = group3.wait(timeout: <span class="type">DispatchTime</span>.now() + <span class="number">1</span>)</span><br><span class="line"><span class="keyword">switch</span> result2 &#123;</span><br><span class="line"><span class="keyword">case</span>.success:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;success&quot;</span>)</span><br><span class="line"><span class="keyword">case</span>.timedOut:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;timedOut&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="日常场景"><a href="#日常场景" class="headerlink" title="日常场景"></a>日常场景</h2><ul>
+<li><p>​    APP启动后多个弹窗（隐私协议、用户守则、活动宣传、版本升级提示更新等等）</p>
+<p>​    </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里为了示例，拿10个系统弹窗来依次执行，非一次弹出，可以设置优先级依次弹出</span></span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>(label: <span class="string">&quot;com.alert.pop&quot;</span>)</span><br><span class="line">queue.async &#123;[<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="keyword">in</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">10</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> sema = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line">        <span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line">            <span class="keyword">let</span> alertVC = <span class="type">UIAlertController</span>()</span><br><span class="line">            alertVC.addAction(<span class="type">UIAlertAction</span>(title: <span class="string">&quot;测试\(i)&quot;</span>, style: <span class="type">UIAlertAction</span>.<span class="type">Style</span>.cancel) &#123;<span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">                sema.signal()</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="keyword">self</span>?.present(alertVC, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        sema.wait()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>耗时异步请求数据后回主线程刷新UI</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> groud = <span class="type">DispatchGroup</span>()</span><br><span class="line"><span class="keyword">let</span> queue1 = <span class="type">DispatchQueue</span>(label: <span class="string">&quot;com.network.download1&quot;</span>,attributes: .concurrent)</span><br><span class="line"><span class="keyword">let</span> queue2 = <span class="type">DispatchQueue</span>(label: <span class="string">&quot;com.network.download2&quot;</span>,attributes: .concurrent)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 队列挂起</span></span><br><span class="line">queue2.suspend()</span><br><span class="line">queue1.async(group: groud, execute: <span class="type">DispatchWorkItem</span>(block: &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;queue1开始网络请求&quot;</span>)</span><br><span class="line">    sleep(<span class="number">3</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;queue1网络请求完毕&quot;</span>)</span><br><span class="line">    <span class="comment">// 恢复队列</span></span><br><span class="line">    queue2.resume()</span><br><span class="line">&#125;))</span><br><span class="line"></span><br><span class="line">queue2.async(group: groud, execute: <span class="type">DispatchWorkItem</span>(block: &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;queue2开始网络请求&quot;</span>)</span><br><span class="line">    sleep(<span class="number">3</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;queue2网络请求完毕&quot;</span>)</span><br><span class="line">&#125;))</span><br><span class="line"></span><br><span class="line">groud.notify(queue: <span class="type">DispatchQueue</span>.main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;刷新UI&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<p>未完待续。。。。</p>
+<ul>
+<li></li>
+<li></li>
+<li></li>
+<li><p>示例代码可以在这里找：<a target="_blank" rel="noopener" href="https://github.com/lizzie8023/gcd.git">https://github.com/lizzie8023/gcd.git</a></p>
+</li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E4%BD%9C/" rel="tag"># 工作</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/15/Hexo+GitHub%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" rel="prev" title="使用GitHub+Hexo搭建博客">
+                  <i class="fa fa-chevron-left"></i> 使用GitHub+Hexo搭建博客
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张泉</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
