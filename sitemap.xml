@@ -69,14 +69,14 @@
   </url>
   
   <url>
-    <loc>http://example.com/categories/flutter/</loc>
+    <loc>http://example.com/categories/iOS/</loc>
     <lastmod>2020-11-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/iOS/</loc>
+    <loc>http://example.com/categories/flutter/</loc>
     <lastmod>2020-11-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
